@@ -1,0 +1,61 @@
+In this tutorial you will learn how to create your first dapp using the Truffle framework and the Solidity programming language. The programmer will learn how to write his first Smart contratc, how to compile it and migrate the Smart contrac, he will also be able to interact with the intelligent contract and we will create an interface that allows him to manage his application from the browser.
+
+It is necessary to meet some essential requirements to start the next tutorial, these are the following:
+You must have Node.js previously installed on your computer, as this is the best and easy way to manage the languages used in our learning:
+You must install solidity to make your programs to use in the creation of the dapp, then you must install the Truffle framework, which will be used for our purpose of creating intelligent contracts and perform operations with them. 
+Finally you will need an environment to carry out your codings and another one to test your contracts, for these two cases you will use https://remix.ethereum.org which is a development environment for ethereum, where you will be able to test one by one the codes carried out in your learning process.
+
+Need metamask (enlarge)
+
+To perform the tests you need and contrast them with the results obtained on https://remix.ethereum.org we recommend using Ganache, which is a blockchain simulator for Ehtereum although not necessary at all, is useful to improve understanding of the process of creating your intelligent contracts. This can be downloaded from the following address: http://truffleframework.com/ganache
+
+We will then create our ideal working environment by making the necessary installations:
+
+
+
+Installing solidity:
+For this you will proceed to the installation via npm using the following command:
+
+npm install -g solc
+
+the rest of the process is done automatically: it is necessary to have Pyhon installed because in the installation process it will look for it and if it is not found it will give the following error message that can be seen in the following image:
+
+Installing Truffle: you should use the following command for the installation:
+npm install -g truffle
+Finally when you check the installation you will see the following result in your console:
+                                                                                                                        
+Running Ganache:
+Ganache, is a blockchain simulator for Ehtereum and to run it from your computer you must download from the official page, this will allow you to perform the necessary tests in your developments.
+The official website is the following: http://truffleframework.com/ganache
+
+When our development environment is finished and ready, we will be able to see the following active screens for programs and perform the necessary tests as shown in the following image.
+  
+  
+
+Project with Truffle:
+Truffle's main page offers several projects that can be useful or guide to make our developments, in this opportunity we will use one of these projects, Webpack as a template for our dApp: http://truffleframework.com/boxes/webpack. Webpack is a module packer for JavaScript applications.
+
+
+Then you must create the directory for your project from the command prompt:
+Mkdisk dappvoting
+And then we enter the directory created with cd dappvoting, remember that it distinguishes between upper and lower case letters:
+
+and once inside the new directory execute the command:
+
+truffle unbox webpack
+
+
+at the end of this installation you can see the following answer in the image:
+
+then in our code editor, I personally use Atom, we will be able to visualize the directories that have been created for our application with Truffle as you can see them here:
+Modifying contract files :
+You will have to delete the contracts ConvertLib.sol and Metacoin.sol in ./contracts and create a new file Voting.sol with the following content that is visualized in the image: when doing this our directory would be this way:
+When we migrate we will use our file Migrations.sol, for this reason we will keep it.
+The migrations:
+Another important aspect of our development is that these contracts must be deployed and have the ability to migrate, for this Trufle is prepared with script that we must configure to perform these tasks. In our next tutorial we will address these aspects and interact directly with our contract, I hope to see them in our next installment to see in operation what we have created so far.
+Curriculum
+this is my second tutorial on github and the first in this series on ethereum blockchain development
+
+
+
+
