@@ -1,0 +1,239 @@
+# Repository:
+https://github.com/ethereum/solidity
+
+# What Will I Learn?
+•     to create smart contracts
+•     it prepares test of intelligent contracts in the chain of ethereum blocks
+
+# Requirements
+•	A Node.js environment (Node.js is used in this tutorial)
+•	Solidity + Truffle Framework
+
+# Difficulty
+Basic level
+
+
+# Tutorial contents
+
+Steemians, greetings again, in the previous tutorial we extended a bit with the creation of our working environment and created our intelligent contract, we just did that and our contract was as follows:
+
+~~~
+
+pragma solidity ^0.4.0;
+
+contract Votating {
+
+  mapping (bytes32 => uint8) public votosRecibidos;
+  mapping (bytes32 => bool) public candidatos;
+
+  function Voting(bytes32[] nombreCandidatos) public {
+    for(uint i = 0; i < nombreCandidatos.length; i++) {
+      candidatos[nombreCandidatos[i]] = true;
+    }
+  }
+
+  function votosTotales(bytes32 candidato) constant public returns (uint8) {
+    require(candidatoEsValido(candidato));
+    return votosRecibidos[candidato];
+  }
+
+  function votar(bytes32 candidato) public {
+    require(candidatoEsValido(candidato));
+    votosRecibidos[candidato] += 1;
+  }
+
+  function candidatoEsValido(bytes32 candidato) constant public returns (bool) {
+    return (candidatos[candidato]);
+  }
+}
+~~~
+
+And here you can see our working environment:
+
+<center>![20190314_072814.gif](https://cdn.steemitimages.com/DQmapL7Eq9LGdAQ4U5qe752fBrY7Y8wM9kYWUs5XPTHTg3E/20190314_072814.gif)</center>
+
+In the code it can be clearly observed that each paragraph or funtion is divided by its corresponding wrench and identified each function, the functioning of each one will be explained in the order that they appear in the code:
+The lines with the instruction mapping are assignments of values for their later use in the functions.
+
+The first block is in charge of the identification of the candidate.
+
+The second block or function votestotals counts the number of votes received by a candidate.
+The third paragraph increases the candidate's votes one by one and the last paragraph verifies the candidate's existence.
+
+# Migrations
+
+With Truffle, you can also create deployment and migration scripts. 
+
+In the directory corresponding to the migrations we will be able to find several files that are used for the deployment of our contracts in the Blockchain, must be attentive to the order since this represented by numbers must be fulfilled when executing.
+
+
+When executing the first file, 1_initial_migrations.js displays the Migrations.sol contract that saves the last contract that has been deployed. Each time the migration is executed, Truffle consults this contract to know which was the last contract deployed and thus deploy those contracts that have not been deployed yet. Then the last_completed_migration variable of the Migrations.sol contract is updated with the last contract that is being deployed, let's update 2_deploy_contracts.js to deploy our Voting contract:
+
+~~~
+var Voting = artifacts.require("./Voting.sol");
+module.exports = function(deployer) {
+  deployer.deploy(Voting, ['Satoshi', 'Vitalik'], {gas: 6700000});
+};
+
+~~~
+
+With a single parameter with the list of candidates, Satoshi and Vitalik. We can also indicate the gas limit to create the contract. 
+
+# Compilation and deployment
+
+Now we can compile our contracts. To do this, go to the contracts folder and execute:
+
+~~~
+truffle compile
+~~~
+ When our contracts have compiled without errors, run our migration scripts to deploy our contracts on the Ganache network:
+
+~~~
+truffle migrate
+~~~
+We will be able to see everything related to the deployed contract such as accounts, blocks, transactions and the log in the Ganache interface:
+
+# How do we configure Truffle to know where to deploy our contracts?
+
+ We must add this information to our truffle.js file, in this case:
+
+~~~
+require('babel-register')
+
+module.exports = {
+  networks: {
+    development: {
+      host: '127.0.0.1',
+      port: 7545,
+      network_id: '*' // Match any network id
+    }
+  }
+}
+
+~~~
+
+That is, our blockchain is running locally, indicated by ip 127.0.0.1 and connects through port 7545. This is Ganache's default port. 
+
+# Now to Interact with the contract.
+
+In the Voting.sol contract, we have the vote function that accepts a candidate and increases the number of votes by 1, i.e. modifies the status of our contract. This is why this function will generate a transaction.
+
+To interact with our contract we will go to the truffle console via:
+
+~~~
+truffle console
+~~~
+We'll deploy our contracts with:
+
+~~~
+migrate
+~~~
+And now we can start interacting. The following code gets the deployed Voting.sol contract and issues a transaction to vote for Satoshi:
+~~~
+Voting.deployed().then(function(contrato) {
+  return contrato.votar("Satoshirom: "0x3fA0dAB0c92334569f3837a4a98a2e4a8A1a42c3"});
+}).then(function(result) {
+  alert("successful transaction: " + result.tx);
+}).catch(function(error) {
+  alert("error: " + error);
+});
+
+~~~
+
+# Calls:
+
+We will create a reading of the code above to read the number of votes after voting for a candidate:
+~~~
+var instancia;
+
+Voting.deployed().then(function(contrato) {
+  instancia = contrato;
+  return contrato.votar("Satoshirom: "0x3fA0dAB0c92334569f3837a4a98a2e4a8A1a42c3"});
+}).then(function(result) {
+  console.log("successful transaction: " + result.tx);
+  return instancia.votosTotales.call("Satoshi).then(function(votos) {
+  console.log("Satoshie " + votos.toNumber() + " votos.");
+});
+
+~~~
+We deploy a new contract and run the old code on our console.
+
+Our callback runs after the voting transaction has been processed and Satoshi's new number of votes is 1.
+By testing our contract, we will do this with two files written in JavaScript and Solidity. 
+
+Truffle tests should be placed under the test directory of our project.
+For our example we have created two unit tests in JavaScript and Solidity:
+
+# TestVotacion.sol:
+
+~~~
+pragma solidity ^0.4.2;
+
+import "truffle/Assert.sol";
+import "truffle/DeployedAddresses.sol";
+import "../contracts/Votacion.sol";
+
+contract TestVotacion {
+
+  function testVotarSatoshi() {
+    Votacion contrato = Votacion(DeployedAddresses.Votacion());
+
+    Assert.equal(uint(contrato.votosTotales("Satoshiuint(0), " The number of votes should be 0");
+    contrato.votar("Satoshi   Assert.equal(uint(contrato.votosTotales("Satoshiuint(1), " The number of votes should be 1");
+  }
+
+  function testVotarPepe() {
+    Votacion contrato = Votacion(DeployedAddresses.Votacion());
+
+    Assert.equal(uint(contrato.votosTotales("Pepeuint(1), " correct functioning");
+  }
+}
+
+~~~
+
+# votacion.js:
+
+~~~
+var Votacion = artifacts.require("./Voting.sol");
+contract('Votacion', function(accounts) {
+  it("votamos a Satoshi con la cuenta 0", function() {
+    var contrato;
+    var votosAntes, votosDespues;
+
+    return Votacion.deployed().then(function(instance) {
+      contrato = instance;
+      return contrato.votosTotales.call("Satoshi   }).then(function(votos) {
+      votosAntes = votos.toNumber();
+      return contrato.votar("Satoshirom: accounts[0]});
+    }).then(function() {
+      return contrato.votosTotales.call("Satoshi   }).then(function(votos) {
+      votosDespues = votos.toNumber();
+      assert.equal(votosAntes + 1, votosDespues, "El número de votos deberia haberse incrementado en 1");
+    });
+  });
+  it("votamos a candidato no valido", function() {
+    var contrato;
+    var votosAntes, votosDespues;
+    return Votacion.deployed().then(function(instance) {
+      contrato = instance;
+      return contrato.votar("Peperom: accounts[0]});
+    }).then(function() {
+      console.debug("excepción")
+    });
+  });
+});
+
+~~~
+To run the tests we use the command:
+
+~~~
+truffle test
+~~~
+
+From the contracts directory, here I show you the two files that are in charge of the execution and verification of the correct functioning of the contracts. 
+
+<center>![dfghdfg568686.png](https://cdn.steemitimages.com/DQmdKMU6ZqirLrq3vz8CuAYTg7mvhcZihFyiSMKCTEH8KCV/dfghdfg568686.png)</center>
+
+<center>![hherherher.png](https://cdn.steemitimages.com/DQmawhdWNv9Hwzm89wH1yTM8NScUSDwqg2783LkV7STcYmY/hherherher.png)</center>
+
+Finally we create a user interface, in our next tutorial we will develop a complete web application with its respective interface built entirely in the Ethereum block chain.
